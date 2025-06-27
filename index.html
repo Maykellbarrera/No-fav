@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Yornal NO FAV</title>
+  <style>
+    body {
+      background-color: #000;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px 0;
+    }
+
+    h1 {
+      color: #ff5252;
+      margin-bottom: 30px;
+      font-size: 32px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .linea {
+      display: flex;
+      margin: 10px 0;
+    }
+
+    .casilla {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      background-color: #1e1e1e;
+      border: 2px solid #555;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .casilla:hover {
+      background-color: #333;
+      transform: scale(1.05);
+    }
+
+    .casilla input[type="checkbox"] {
+      transform: scale(1.5);
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    .checked {
+      background-color: #4caf50 !important;
+      border-color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>NO FAV</h1>
+  <div id="contenedor"></div>
+
+  <script>
+    const contenedor = document.getElementById('contenedor');
+
+    const lineas = 3; // Línea 1, 2 y 3 (antes eran 4, quitamos una)
+    const casillasPorLinea = 10;
+
+    let numero = 1;
+    const estadoGuardado = JSON.parse(localStorage.getItem('estadoCasillas')) || {};
+
+    for (let i = 0; i < lineas; i++) {
+      const linea = document.createElement('div');
+      linea.className = 'linea';
+
+      for (let j = 0; j < casillasPorLinea; j++) {
+        const actual = numero++;
+        const casilla = document.createElement('div');
+        casilla.className = 'casilla';
+
+        const label = document.createElement('label');
+        label.textContent = actual;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `casilla-${actual}`;
+
+        if (estadoGuardado[checkbox.id]) {
+          checkbox.checked = true;
+          casilla.classList.add('checked');
+        }
+
+        checkbox.addEventListener('change', () => {
+          estadoGuardado[checkbox.id] = checkbox.checked;
+          localStorage.setItem('estadoCasillas', JSON.stringify(estadoGuardado));
+          casilla.classList.toggle('checked', checkbox.checked);
+        });
+
+        casilla.appendChild(label);
+        casilla.appendChild(checkbox);
+        linea.appendChild(casilla);
+      }
+
+      contenedor.appendChild(linea);
+    }
+  </script>
+
+</body>
+</html>
